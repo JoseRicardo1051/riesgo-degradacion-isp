@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ISP Risk Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <main class="layout">
+        <section class="hero">
+            <div>
+                <p class="eyebrow">Prediccion operativa</p>
+                <h1>Riesgo de Degradacion del Servicio</h1>
+                <p class="subtitle">
+                    Ingresa las metricas del cliente, consume la API local y guarda el historial en MySQL.
+                </p>
+            </div>
+            <div class="hero-card">
+                <span>API</span>
+                <strong>POST /api/predict</strong>
+                <small>Historial disponible en GET /api/history</small>
+            </div>
+        </section>
+
+        <section class="grid">
+            <article class="panel">
+                <h2>Nueva prediccion</h2>
+                <form id="prediction-form" class="form-grid">
+                    <label>
+                        Velocidad contratada (Mbps)
+                        <input type="number" step="0.01" name="velocidad_contratada_mbps" required>
+                    </label>
+                    <label>
+                        Distancia a central (km)
+                        <input type="number" step="0.01" name="distancia_central_km" required>
+                    </label>
+                    <label>
+                        Potencia RX (dBm)
+                        <input type="number" step="0.01" name="potencia_rx_dbm" required>
+                    </label>
+                    <label>
+                        Latencia (ms)
+                        <input type="number" step="0.01" name="latencia_ms" required>
+                    </label>
+                    <label>
+                        Perdida de paquetes (%)
+                        <input type="number" step="0.01" name="perdida_paquetes_pct" required>
+                    </label>
+                    <label>
+                        Jitter (ms)
+                        <input type="number" step="0.01" name="jitter_ms" required>
+                    </label>
+                    <label>
+                        Uso de ancho de banda (%)
+                        <input type="number" step="0.01" name="uso_ancho_banda_pct" required>
+                    </label>
+                    <label>
+                        Quejas recientes
+                        <input type="number" name="quejas_recientes" min="0" required>
+                    </label>
+                    <label>
+                        Antiguedad (meses)
+                        <input type="number" name="antiguedad_meses" min="1" required>
+                    </label>
+                    <label class="full">
+                        Distrito
+                        <select name="distrito" required>
+                            <option value="">Selecciona un distrito</option>
+                            <option value="Carabayllo">Carabayllo</option>
+                            <option value="Comas">Comas</option>
+                            <option value="Independencia">Independencia</option>
+                            <option value="Los Olivos">Los Olivos</option>
+                            <option value="Puente Piedra">Puente Piedra</option>
+                            <option value="San Martin de Porres">San Martin de Porres</option>
+                        </select>
+                    </label>
+                    <button type="submit" class="full">Analizar cliente</button>
+                </form>
+            </article>
+
+            <article class="panel result-panel">
+                <h2>Resultado</h2>
+                <div id="result-empty" class="result-empty">
+                    Aun no hay una prediccion. Completa el formulario para consultar la API.
+                </div>
+                <div id="result-card" class="result-card hidden">
+                    <p class="result-label">Clase predicha</p>
+                    <h3 id="predicted-class">-</h3>
+                    <p class="result-label">Probabilidad de riesgo</p>
+                    <p id="predicted-probability">-</p>
+                    <p class="result-label">Nivel de riesgo</p>
+                    <span id="risk-level" class="badge">-</span>
+                </div>
+                <pre id="api-message" class="api-message"></pre>
+            </article>
+        </section>
+
+        <section class="panel">
+            <div class="history-header">
+                <h2>Historial reciente</h2>
+                <button id="refresh-history" type="button">Actualizar</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Distrito</th>
+                            <th>Clase</th>
+                            <th>Probabilidad</th>
+                            <th>Nivel</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body">
+                        <tr>
+                            <td colspan="6">Sin registros todavia.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
